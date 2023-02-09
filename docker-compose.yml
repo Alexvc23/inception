@@ -1,0 +1,140 @@
+# version of Docker Compose syntax used in the file
+version: "3.8"
+
+#! name of the Docker Compose project
+name: inception
+#---------------------------------------------------------------------------------
+#! section defining the services that make up the project
+services:
+    #? name of the service
+  mariadb:
+    # name of the container
+    container_name: mariadb
+    # name of the Docker image to be used for the service
+    image: mariadb
+    build:
+      # the directory containing the Dockerfile and other required files to build the image
+      context: ./requirements/mariadb
+      # the arguments to be passed to the Dockerfile during the image build
+      args:
+        - MYSQL_ROOT_PASSWORD
+        - MYSQL_DATABASE
+        - MYSQL_USER
+        - MYSQL_PASSWORD
+    # property specifying if the database should be initialized at container startup
+    init: true
+    # mapping of a named volume "data-db" to the "/var/lib/mysql" directory in the container
+    volumes:
+    # this is used to persist the database data
+      - data-db:/var/lib/mysql
+    # the network(s) to which the service should be attached
+    networks:
+      - inception
+    ports:
+    # mapping of the container port 3306 to the host port 3306
+      - 3306
+    # the policy for automatically restarting the container if it stops
+    restart: on-failure
+#---------------------------------------------------------------------------------
+#! Define a service named "wordpress"
+wordpress:
+    # Give the container a unique name
+    container_name: wordpress
+    # Use the official "wordpress" image
+    image: wordpress
+    # Specify build instructions for the image
+    build:
+      # Set the context for the build to the "./requirements/wordpress" directory
+      context: ./requirements/wordpress
+      # Pass the following arguments to the build process
+      args:
+        - MYSQL_DATABASE
+        - MYSQL_USER
+        - MYSQL_PASSWORD
+        - MYSQL_HOST
+    # Load environment variables from the ".env" file
+    env_file:
+      - .env
+    # Map a volume named "data-wp" to the container's "/var/www/html" directory
+    volumes:
+      - data-wp:/var/www/html
+    # Connect the service to the "inception" network
+    networks:
+      - inception
+    # Expose ports 9000 and 3306 to allow external access to the container
+    ports:
+      - 9000
+      - 3306
+    # Restart the container in case of failures
+    restart: on-failure
+    # Make sure the "mariadb" service is started before this one
+    depends_on:
+      - mariadb
+#---------------------------------------------------------------------------------
+# !Define a service named "nginx"
+nginx:
+    #? Give the container a unique name
+    container_name: nginx
+    # Use the official "nginx" image
+    image: nginx
+    # Specify build instructions for the image
+    build:
+      # Set the context for the build to the "./requirements/nginx" directory
+      context: ./requirements/ngin
+    # Enable the container's init process
+    init: true
+    # Map a volume named "data-wp" to the container's "/var/www/html" directory
+    volumes:
+      - data-wp:/var/www/html
+    # Connect the service to the "inception" network
+    networks:
+      - inception
+    # Expose ports 443 and 9000 to allow external access to the container
+    ports:
+      # Map the host's port 443 to the container's port 443
+      - 443:443
+      # Map the host's port 9000 to the container's port 9000
+      - 9000
+    # Restart the container in case of failures
+    restart: on-failure
+    # Make sure the "wordpress" service is started before this one
+    depends_on:
+      - wordpress
+#---------------------------------------------------------------------------------
+#! Define a volume named "data-db"
+volumes:
+  data-db:
+    #? Give the volume a friendly name
+    name: data-db
+    # Use the local driver
+    driver: local
+    # Set options for the local driver
+    driver_opts:
+      # Use the host file system without modifying its type or format
+      type: none
+      # Map the volume to the host machine's "/home/$USER/data/data-db" directory
+      device: /home/$USER/data/data-db
+      # Specify that the host file system should be mounted directly into the container
+      o: bind
+  # Define a volume named "data-wp"
+  data-wp:
+      # Give the volume a friendly name
+      name: data-wp 
+      # Use the local driver
+      driver: local
+      # Set options for the local driver
+      driver_opts:
+        # Use the host file system without modifying its type or format
+        type: none
+        # Map the volume to the host machine's "/home/$USER/data/data-wp" directory
+        device: /home/$USER/data/data-wp
+        # Specify that the host file system should be mounted directly into the container
+        o: bind
+#---------------------------------------------------------------------------------
+#! Define a network named "inception"
+networks:
+  inception:
+    #? Give the network a friendly name
+    name: inception
+    # Use the bridge driver
+    driver: bridge
