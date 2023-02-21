@@ -18,8 +18,8 @@ services:
       # the arguments to be passed to the Dockerfile during the image build
       args:
         - MYSQL_ROOT_PASSWORD
-        - MYSQL_DATABASE
         - MYSQL_USER
+        - MYSQL_DATABASE
         - MYSQL_PASSWORD
     # property specifying if the database should be initialized at container startup
     init: true
