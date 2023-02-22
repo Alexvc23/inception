@@ -37,69 +37,69 @@ services:
     restart: on-failure
 #---------------------------------------------------------------------------------
 #! Define a service named "wordpress"
-wordpress:
-    # Give the container a unique name
-    container_name: wordpress
-    # Use the official "wordpress" image
-    image: wordpress
-    # Specify build instructions for the image
-    build:
-      # Set the context for the build to the "./requirements/wordpress" directory
-      context: ./requirements/wordpress
-      # Pass the following arguments to the build process
-      args:
-        - MYSQL_DATABASE
-        - MYSQL_USER
-        - MYSQL_PASSWORD
-        - MYSQL_HOST
-    # Load environment variables from the ".env" file
-    env_file:
-      - .env
-    # Map a volume named "data-wp" to the container's "/var/www/html" directory
-    volumes:
-      - data-wp:/var/www/html
-    # Connect the service to the "inception" network
-    networks:
-      - inception
-    # Expose ports 9000 and 3306 to allow external access to the container
-    ports:
-      - 9000
-      - 3306
-    # Restart the container in case of failures
-    restart: on-failure
-    # Make sure the "mariadb" service is started before this one
-    depends_on:
-      - mariadb
-#---------------------------------------------------------------------------------
-# !Define a service named "nginx"
-nginx:
-    #? Give the container a unique name
-    container_name: nginx
-    # Use the official "nginx" image
-    image: nginx
-    # Specify build instructions for the image
-    build:
-      # Set the context for the build to the "./requirements/nginx" directory
-      context: ./requirements/ngin
-    # Enable the container's init process
-    init: true
-    # Map a volume named "data-wp" to the container's "/var/www/html" directory
-    volumes:
-      - data-wp:/var/www/html
-    # Connect the service to the "inception" network
-    networks:
-      - inception
-    # Expose ports 443 and 9000 to allow external access to the container
-    ports:
-      # Map the host's port 443 to the container's port 443
-      - 443:443
-      # Map the host's port 9000 to the container's port 9000
-      - 9000
-    # Restart the container in case of failures
-    restart: on-failure
-    # Make sure the "wordpress" service is started before this one
-    depends_on:
-      - wordpress
+  wordpress:
+      # Give the container a unique name
+      container_name: wordpress
+      # Use the official "wordpress" image
+      image: wordpress
+      # Specify build instructions for the image
+      build:
+        # Set the context for the build to the "./requirements/wordpress" directory
+        context: ./requirements/wordpress
+        # Pass the following arguments to the build process
+        args:
+          - MYSQL_DATABASE
+          - MYSQL_USER
+          - MYSQL_PASSWORD
+          - MYSQL_HOST
+      # Load environment variables from the ".env" file
+      env_file:
+        - .env
+      # Map a volume named "data-wp" to the container's "/var/www/html" directory
+      volumes:
+        - data-wp:/var/www/html
+      # Connect the service to the "inception" network
+      networks:
+        - inception
+      # Expose ports 9000 and 3306 to allow external access to the container
+      ports:
+        - 9000
+        - 3306
+      # Restart the container in case of failures
+      restart: on-failure
+      # Make sure the "mariadb" service is started before this one
+      depends_on:
+        - mariadb
+  #---------------------------------------------------------------------------------
+  # !Define a service named "nginx"
+  nginx:
+      #? Give the container a unique name
+      container_name: nginx
+      # Use the official "nginx" image
+      image: nginx
+      # Specify build instructions for the image
+      build:
+        # Set the context for the build to the "./requirements/nginx" directory
+        context: ./requirements/ngin
+      # Enable the container's init process
+      init: true
+      # Map a volume named "data-wp" to the container's "/var/www/html" directory
+      volumes:
+        - data-wp:/var/www/html
+      # Connect the service to the "inception" network
+      networks:
+        - inception
+      # Expose ports 443 and 9000 to allow external access to the container
+      ports:
+        # Map the host's port 443 to the container's port 443
+        - 443:443
+        # Map the host's port 9000 to the container's port 9000
+        - 9000
+      # Restart the container in case of failures
+      restart: on-failure
+      # Make sure the "wordpress" service is started before this one
+      depends_on:
+        - wordpress
 #---------------------------------------------------------------------------------
 #! Define a volume named "data-db"
 volumes:
