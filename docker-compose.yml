@@ -110,12 +110,10 @@ volumes:
     driver: local
     # Set options for the local driver
     driver_opts:
-      # Use the host file system without modifying its type or format
-      type: none
+      # Specify that the host file system should be mounted directly into the container
+      type: bind 
       # Map the volume to the host machine's "/home/$USER/data/data-db" directory
       device: /home/$USER/data/data-db
-      # Specify that the host file system should be mounted directly into the container
-      o: bind
   # Define a volume named "data-wp"
   data-wp:
       # Give the volume a friendly name
@@ -124,12 +122,10 @@ volumes:
       driver: local
       # Set options for the local driver
       driver_opts:
-        # Use the host file system without modifying its type or format
-        type: none
+        # Specify that the host file system should be mounted directly into the container
+        type: bind 
         # Map the volume to the host machine's "/home/$USER/data/data-wp" directory
         device: /home/$USER/data/data-wp
-        # Specify that the host file system should be mounted directly into the container
-        o: bind
 #---------------------------------------------------------------------------------
 #! Define a network named "inception"
 networks:
