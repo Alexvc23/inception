@@ -80,7 +80,7 @@ services:
       # Specify build instructions for the image
       build:
         # Set the context for the build to the "./requirements/nginx" directory
-        context: ./requirements/ngin
+        context: ./requirements/nginx
       # Enable the container's init process
       init: true
       # Map a volume named "data-wp" to the container's "/var/www/html" directory
