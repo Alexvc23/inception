@@ -49,10 +49,10 @@ down:
 			$(COMPOSE) down
 
 clean:
-			docker-compose --project-directory=srcs down --rmi all
+			docker-compose --project-directory=srcs/ down --rmi all
 
 fclean:
-			docker-compose --project-directory=srcs down --rmi all --volumes
+			docker-compose --project-directory=srcs/ down --rmi all --volumes
 			sudo rm -rf /home/$(USER)/data/*
 
 re:			fclean all
