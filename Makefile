@@ -45,7 +45,7 @@ stop:
 down:
 			$(COMPOSE) down --rmi all --volumes
 			#docker volume rm $(VOLUMES) 
-			rm -rf /home/$(USER)/data
+			sudo rm -rf /home/$(USER)/data
 
 logs:
 			docker-compose -f srcs/docker-compose.yml -p inception logs
