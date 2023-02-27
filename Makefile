@@ -1,6 +1,8 @@
 
 
 NAME		= inception
+USER		= $(shell whoami)
+VOLUMES		= $(shell docker volume ls -f "name=inception" -q)
 
 COMPOSE		= docker-compose -f srcs/docker-compose.yml -p $(NAME)
 
@@ -14,8 +16,8 @@ build:		volumes
 			$(COMPOSE) build --parallel
 
 volumes:
-			@mkdir -p /home/$(USER)/data/WordPress
-			@mkdir -p /home/$(USER)/data/DB
+			mkdir -p /home/$(USER)/data/WordPress
+			mkdir -p /home/$(USER)/data/DB
 
 create:		build
 			$(COMPOSE) create
@@ -41,11 +43,9 @@ stop:
 			$(COMPOSE) stop
 
 down:
-			$(COMPOSE) down --rmi all
-
-delete_volumes:
-			docker volume rm $(shell docker volume ls -f "name=inception" -q)
-			rm -rf /home/$(shell echo $USER)/data
+			$(COMPOSE) down --rmi all --volumes
+			#docker volume rm $(VOLUMES) 
+			rm -rf /home/$(USER)/data
 
 logs:
 			docker-compose -f srcs/docker-compose.yml -p inception logs

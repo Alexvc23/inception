@@ -65,14 +65,14 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/$USER/data/DB
+      device: /home/${USER}/data/DB
       o: bind
 
   WordPress:
     driver: local
     driver_opts:
       type: none
-      device: /home/$USER/data/WordPress
+      device: /home/${USER}/data/WordPress
       o: bind
 
 networks:
