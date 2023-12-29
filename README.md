@@ -43,10 +43,8 @@ $> ls -alR
 │   ├── docker-compose.yml
 │   ├── .env
 │   └── requirements
-│       ├── bonus
 │       ├── mariadb
 │       ├── nginx
-│       ├── tools
 │       └── wordpress
 ```
 
